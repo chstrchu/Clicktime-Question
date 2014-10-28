@@ -1,32 +1,39 @@
 <!DOCTYPE html>
 <head>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	
 </head>
 <body>
-	<canvas id = "canvasInAPerfectWorld" width="490" height="220"></canvas>    
+	<canvas id = "canvas" width="490" height="220" style="border:1px solid #c3c3c3;"></canvas>  
 	<script>
+	    var context = document.getElementById('canvas').getContext("2d");
 	
-	    var context = document.getElementById('canvasInAPerfectWorld').getContext("2d");
-	    $('#canvas').mousedown(function(e){
+		$('#canvas').mousedown(function(e){
 		  var mouseX = e.pageX - this.offsetLeft;
 		  var mouseY = e.pageY - this.offsetTop;
 
 		  paint = true;
-		  addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
+		  addClick(mouseX, mouseY);
 		  redraw();
 		});
+
 		$('#canvas').mousemove(function(e){
+		  var mouseX = e.pageX - this.offsetLeft;
+		  var mouseY = e.pageY - this.offsetTop;
 		  if(paint){
-		    addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
+		    addClick(mouseX, mouseY, true);
 		    redraw();
 		  }
 		});
+
 		$('#canvas').mouseup(function(e){
 		  paint = false;
 		});
+
 		$('#canvas').mouseleave(function(e){
 		  paint = false;
 		});
+
 		var clickX = new Array();
 		var clickY = new Array();
 		var clickDrag = new Array();
@@ -41,7 +48,7 @@
 		function redraw(){
 		  //context.clearRect(0, 0, context.canvas.width, context.canvas.height); 
 
-		  context.strokeStyle = "#FF0000";
+		  context.strokeStyle = '#'+Math.random().toString(16).substr(-6);
 		  context.lineJoin = "round";
 		  context.lineWidth = 5;
 
@@ -57,6 +64,6 @@
 		     context.stroke();
 		  }
 		}
-	</script>
+	</script>  
 </body>
 </html>
