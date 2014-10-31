@@ -3,25 +3,70 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 	
 </head>
-<body>
-	<canvas id = "canvas" width="490" height="220" style="border:1px solid #c3c3c3;"></canvas>  
+<body> 
+	<canvas id = "canvas" width="600" height="400" style="border:1px solid #c3c3c3;"></canvas>
+	<b>Connected Users</b> 
+	<ul id="users"></ul>
+	<script src="http://cdn.socket.io/socket.io-1.2.0.js"></script>
+	<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 	<script>
+	    var base = 'http://clicktime.herokuapp.com:80/rooms/';
+		var roomName = 'chester-room';
+		var prevheartbeat = 0;
+        var heartbeat = 0;
+        //for testing purposes
+		var socket = io.connect('http://localhost:3000');
+		
 	    var context = document.getElementById('canvas').getContext("2d");
+	
+	    socket.on('connect', function(){
+		    socket.emit('heartbeat');
+		    var timer = setInterval(function() {myTimer()}, 35000);
+		    function myTimer() {
+			    if(heartbeat != prevheartbeat + 30) {
+				    socket.emit('error', data);
+			    };
+			    prevheartbeat = 0;
+			    heartbeat = 0;
+		    };
+		    socket.emit('welcome', prompt("What is your name?"));
+	    });
+	
+	    socket.on('heartbeat', function(data){
+		    heartbeat = heartbeat + 30;
+	    });    
+	
+	    socket.on('message', function(data){
+		    addClick(data[0], data[1], data[2]);
+			redraw();
+		    
+ 	    });
+
+        socket.on('updateusers', function(data){
+	        $('#users').empty();
+	        $.each(data, function (key, value){
+		        $('#users').append('<div>' + key + '</div>');
+        	});
+	            
+        });
 	
 		$('#canvas').mousedown(function(e){
 		  var mouseX = e.pageX - this.offsetLeft;
 		  var mouseY = e.pageY - this.offsetTop;
-
 		  paint = true;
+		  var data = [mouseX, mouseY, false];
 		  addClick(mouseX, mouseY);
+		  socket.emit('message', data);
 		  redraw();
 		});
 
 		$('#canvas').mousemove(function(e){
 		  var mouseX = e.pageX - this.offsetLeft;
 		  var mouseY = e.pageY - this.offsetTop;
+		  var data = [mouseX, mouseY, true];
 		  if(paint){
 		    addClick(mouseX, mouseY, true);
+		    socket.emit('message', data);
 		    redraw();
 		  }
 		});
@@ -38,6 +83,7 @@
 		var clickY = new Array();
 		var clickDrag = new Array();
 		var paint;
+	    var color = '#'+Math.random().toString(16).substr(-6);
 
 		function addClick(x, y, dragging)
 		{
@@ -46,9 +92,9 @@
 		  clickDrag.push(dragging);
 		}
 		function redraw(){
-		  //context.clearRect(0, 0, context.canvas.width, context.canvas.height); 
+		  context.clearRect(0, 0, context.canvas.width, context.canvas.height); 
 
-		  context.strokeStyle = '#'+Math.random().toString(16).substr(-6);
+		  context.strokeStyle = color;
 		  context.lineJoin = "round";
 		  context.lineWidth = 5;
 
@@ -63,7 +109,10 @@
 		     context.closePath();
 		     context.stroke();
 		  }
+		  
 		}
+		
 	</script>  
+	
 </body>
 </html>

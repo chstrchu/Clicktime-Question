@@ -1,0 +1,9 @@
+{
+  "name": "clicktime-question",
+  "version": "0.0.1",
+  "description": "my solution",
+  "dependencies": {
+    "express": "^4.10.1",
+    "socket.io": "^1.2.0"
+  }
+}
