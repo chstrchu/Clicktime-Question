@@ -17,7 +17,6 @@ io.on('connection', function(socket){
 		usernames[username] = username;
 		io.emit('updateusers', usernames);
 		console.log('socket ready');
-		//console.log(usernames[username]);
 	});
 	
 	socket.on('disconnect', function(){
@@ -27,7 +26,6 @@ io.on('connection', function(socket){
 	});
 	
 	socket.on('message', function(data){
-		//socket.emit('message', 'data sent');
 		io.emit('message', data);
 	});
 	
@@ -39,14 +37,16 @@ io.on('connection', function(socket){
 		};
 	});
 	
+	
 	socket.on('error', function(err) {
 		//things go wrong
-		var type = err.type //error type
+		var type = err.type; //error type
 		var message = err.message; //friendly message describing error
+		console.error(err);
 		
 	});
 });
 
-http.listen(3000, function(){
-	console.log('listening on *:3000');
+http.listen(80, function(){
+	console.log('listening on *:80');
 });
