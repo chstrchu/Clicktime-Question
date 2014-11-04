@@ -10,15 +10,12 @@
 	<script src="http://cdn.socket.io/socket.io-1.2.0.js"></script>
 	<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 	<script>
-	    var base = 'http://clicktime.herokuapp.com:80/rooms/';
-		var roomName = 'chester-room';
-		var socket = io.connect(base + roomName);
-		var prevheartbeat = 0;
+	var prevheartbeat = 0;
         var heartbeat = 0;
         //for testing purposes
-		//var socket = io.connect('http://localhost:3000');
+	var socket = io.connect('http://localhost:3000');
 		
-	    var context = document.getElementById('canvas').getContext("2d");
+	var context = document.getElementById('canvas').getContext("2d");
 	
 	    socket.on('connect', function(){
 		    socket.emit('heartbeat');
